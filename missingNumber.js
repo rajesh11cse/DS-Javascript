@@ -27,3 +27,34 @@ function findMissing() {
    // var total = n*(n+1)/2;
   //  return total - sum;
 } 
+
+
+// Misssing in AP (Arithmetic Progression)
+// https://www.geeksforgeeks.org/find-missing-number-arithmetic-progression/
+ function findMissingUtil(arr, low, high, diff){
+    // There must be two elements
+    // to find the missing
+    if (high <= low)
+        return Number.MAX_VALUE;
+
+    // Find index of
+    // middle element
+    let mid = low + parseInt((high - low) / 2, 10);
+
+
+    if (arr[mid + 1] - arr[mid] != diff)
+        return (arr[mid] + diff);
+
+    if (mid > 0 && arr[mid] -
+                arr[mid - 1] != diff)
+        return (arr[mid - 1] + diff);
+
+    // If the elements till mid follow
+    // AP, then recur for right half
+    // The position of element (eg. 3rd)-> arr[0] + 3 * diff
+    if (arr[mid] == arr[0] + mid * diff)
+        return findMissingUtil(arr, mid + 1, high, diff);
+
+    // Else recur for left half
+    return findMissingUtil(arr, low, mid - 1, diff);
+}
