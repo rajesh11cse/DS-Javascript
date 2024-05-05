@@ -5,7 +5,7 @@ var grid  =[[0,1,0,0],
             [0,1,0,0],
             [1,1,0,0]];
 
-console.log("Number of islands -- ", getNumberOfIslands(grid));
+console.log("Number of islands -- ", getNumberOfIslands(grid)); // Output : 4
 
 
 
