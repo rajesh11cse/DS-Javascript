@@ -3,6 +3,9 @@
 // The call and apply methods set this to a function and call the function.
 // The bind method will only set this to a function. We will need to separately invoke the function.
 
+// Polyfill => 
+https://www.geeksforgeeks.org/explain-call-apply-and-bind-methods-in-javascript/
+
 
 
 /* call */
@@ -15,10 +18,9 @@
 // Case 1 -> Setting the this Value
 function greet(name) {
     console.log(`Hello, ${name}! My name is ${this.name}.`);
-  }
+}
   
 let person = { name: "John" };
-
 greet.call(person, "Alice"); // Output: Hello, Alice! My name is John.
 
 // Case 2 -> Function Borrowing. Let's borrow the sayHello method from person1 and use it with person2:
@@ -27,14 +29,12 @@ let person1 = {
     sayHello: function(age) { // parameter too
         console.log(`Hello, my name is ${this.name} and I am ${age} year old`);
     }
-  };
+};
 
 let person2 = {
     name : "Charlie"
 }
-  
 person1.sayHello.call(person2, 30)
-
 
 
 
@@ -51,7 +51,7 @@ person1.sayHello.call(person2, 30)
 */
 function greet(name) {
     console.log(`Hello, ${name}! My name is ${this.name}.`);
-  }
+}
   
 let person = { name: "John" };
 
