@@ -113,10 +113,25 @@ const sum = (x) => {
     };
     return innerSum;
 };
+/* ---- OR--- */
+function sum(a) {
+  let total = a;
+  function innerSum(b) {
+      if (b === undefined) {
+          return total;
+      }
+      total += b;
+      return innerSum;
+  }
+  return innerSum; // retun 1st time only on a = 5 then result is function
+}
 
 // Example usage:
 const result = sum(5)(6)(7)(8)(9)();
 console.log(result); // Output: 35
+
+
+
 
 
 
