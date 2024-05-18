@@ -14,7 +14,9 @@ rl.question('Please Enter a sting : ', (answer) => {
 function getfirstNonRepeatingChar(number) {
     console.log("___________________  Output  ____________________")
 
-    var flags = new Uint8Array(256); //all is initialized by 0 
+    let flags = new Uint8Array(256); //all is initialized by 0 
+    // OR
+// let flags = new Array(256).fill(0);
 
 console.log(flags)
     
