@@ -1,7 +1,7 @@
 // All are used primarily to control the context (the value of this) when invoking functions.
 
-// The call and apply methods set this to a function and call the function.
-// The bind method will only set this to a function. We will need to separately invoke the function.
+// The call and apply methods set `this` to a function and call the function.
+// The bind method will only set `this` to a function. We will need to separately invoke the function.
 
 // Polyfill => 
 https://www.geeksforgeeks.org/explain-call-apply-and-bind-methods-in-javascript/
