@@ -121,3 +121,153 @@ lruCache.read('a'); // output 123
 lruCache.write('d', 0);
 
 
+
+
+
+
+
+/* 
+
+Design a low level design for a Cache system.
+
+Cache system should have support for following operations:
+1. Put: This will allow user to put a value against a key in the cache.
+2. Get: This will allow user to get the previously saved value using key.
+3. Eviction: Cache should also support removal of some key in case cache is full, based on Storage Full Exception Handling and LRU Eviction Policy
+4. Eviction Based on Expiry(TTL) / Time Based Eviction
+5. Support multiple concurrent read and single write in the cache or Multi Threading Issues
+6. API detailing
+7. DB Schema 
+
+*/
+
+/* Classes and Data Structures */
+class CacheEntry {
+  constructor(key, value, ttl = null) {
+      this.key = key;
+      this.value = value;
+      this.lastAccessedTime = Date.now();
+      this.ttl = ttl ? Date.now() + ttl : null;
+  }
+
+  isExpired() {
+      return this.ttl && this.ttl < Date.now();
+  }
+
+  updateAccessTime() {
+      this.lastAccessedTime = Date.now();
+  }
+}
+
+/* Main cache class */
+class Cache {
+  constructor(capacity) {
+      this.capacity = capacity;
+      this.store = new Map();
+      this.accessOrder = new Map(); // Key: CacheEntry, Value: Last Access Time
+  }
+
+  // case 1
+  put(key, value, ttl = null) {
+      if (this.store.size >= this.capacity) {
+          this.evict();
+      }
+      const entry = new CacheEntry(key, value, ttl);
+      this.store.set(key, entry);
+      this.updateAccessOrder(entry);
+  }
+
+  // case 2
+  get(key) {
+      const entry = this.store.get(key);
+      if (entry) {
+          if (entry.isExpired()) {
+              this.remove(key);
+              return `Item not available in cache for key ${key}`;
+          }
+          entry.updateAccessTime();
+          this.updateAccessOrder(entry);
+          return entry.value;
+      }
+      return `Item not available in cache for key ${key}`;
+  }
+
+  // case 3
+  remove(key) {
+      const entry = this.store.get(key);
+      if (entry) {
+          this.accessOrder.delete(entry);
+          this.store.delete(key);
+      }
+  }
+
+  // case 4
+  evict() {
+      // Evict based on LRU or TTL
+      this.cleanExpiredEntries();
+      if (this.store.size >= this.capacity) {
+          const oldestEntry = this.getOldestEntry();
+          this.remove(oldestEntry.key);
+      }
+  }
+
+  cleanExpiredEntries() {
+      for (let [key, entry] of this.store) {
+          if (entry.isExpired()) {
+              this.remove(key);
+          }
+      }
+  }
+
+  getOldestEntry() {
+      return Array.from(this.accessOrder.entries()).reduce((oldest, entry) => {
+          return (oldest[1] < entry[1]) ? oldest : entry;
+      })[0];
+  }
+
+  updateAccessOrder(entry) {
+      this.accessOrder.delete(entry);
+      this.accessOrder.set(entry, entry.lastAccessedTime);
+  }
+}
+
+/* Case 5 */
+/* 
+In JavaScript (Node.js), you can use async and await to manage asynchronous operations.
+To support multiple concurrent reads and a single write, you can use async functions with proper locking mechanisms
+*/
+// Let's say for PUT example, similary can be for GET also
+/* 
+// Keep this on top outside class
+const { Mutex } = require('async-mutex');
+async put(key, value, ttl = null) {
+  const release = await this.mutex.acquire();
+  try {
+      if (this.store.size >= this.capacity) {
+          this.evict();
+      }
+      const entry = new CacheEntry(key, value, ttl);
+      this.store.set(key, entry);
+      this.updateAccessOrder(entry);
+  } finally {
+      release();
+  }
+} */
+
+/* Case 6 */
+/*
+  PUT /cache: Adds a key-value pair to the cache.
+    Request Body: { "key": "someKey", "value": "someValue", "ttl": 60000 }
+  GET /cache/:key: Retrieves the value for a given key.
+    URL Parameter: key 
+*/
+
+/* Case 7 */
+// Although a cache typically resides in-memory, if you need persistence, you can use a simple key-value store schema:
+/* 
+CREATE TABLE Cache (
+  key VARCHAR PRIMARY KEY,
+  value TEXT,
+  ttl BIGINT,
+  lastAccessedTime BIGINT
+); */
