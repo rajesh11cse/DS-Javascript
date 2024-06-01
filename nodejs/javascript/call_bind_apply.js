@@ -83,10 +83,6 @@ console.log(Math.max.apply(null, [2,7,3])) // 7
 
 
 
-
-
-
-
 /* bind */
 /* 
     1. Preserving Context: It allows you to ensure that a function always executes in a specific context, regardless of how it’s called.
